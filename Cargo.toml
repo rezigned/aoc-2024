@@ -1,0 +1,13 @@
+[package]
+name = "aoc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+console_error_panic_hook = "0.1.7"
+console_log = "1.0.0"
+leptos = { version = "0.7.0", features = ["csr"] }
+leptos-use = { version = "0.14.0", features = ["use_interval"] }
+log = "0.4.22"
+reactive_stores = "0.1.0"
+wasm-bindgen = "0.2.99"
