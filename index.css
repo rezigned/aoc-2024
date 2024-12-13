@@ -10,6 +10,10 @@ body {
   background-color: #e6e6e6;
 }
 
+h1, h2 {
+  text-align: center;
+}
+
 h2 {
   margin-top: -1rem;
 }
@@ -19,8 +23,10 @@ h2 {
 }
 .grid {
   display: grid;
-  grid-template-columns: repeat(10, 3rem);
-  grid-template-rows: repeat(10, 3rem);
+  margin: 0 auto;
+  min-height: 50vmin;
+  grid-template-columns: repeat(10, minmax(30px, 1fr));
+  grid-template-rows: repeat(10, minmax(30px, 1fr));
   gap: 2px;
   background-color: #000;
   padding: 3px;
@@ -28,6 +34,7 @@ h2 {
   box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
     5px 5px 0px 0px;
   color: #000;
+  aspect-ratio: 1;
 }
 .grid .cell {
   background-color: rgb(250, 255, 252);
@@ -100,6 +107,7 @@ h2 {
 }
 .credit {
   text-align: right;
+  margin-bottom: 1rem;
 }
 .credit a {
   color: #2a9ca7;
@@ -133,18 +141,6 @@ h2 {
   }
 }
 
-/* .button:hover {
-  box-shadow: 0px 0px 0px 0px;
-  top: 5px;
-  left: 5px;
-} */
-
-@media (min-width: 768px) {
-  .button {
-    padding: 0.25em 0.75em;
-  }
-}
-
 .btn-container {
   width: 2.6rem;
   height: 1.6rem;
@@ -158,8 +154,6 @@ h2 {
   padding: 0;
   cursor: pointer;
   background-color: transparent;
-  /* will-change: border-width;
-  transition: all 0.2s ease; */
 
   &.paused {
     border-style: double;
@@ -170,4 +164,25 @@ h2 {
 
 .hide {
   display: none;
+}
+
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  h2 {
+    font-size: 1.2rem;
+  }
+  body {
+    font-size: 0.9rem;
+  }
+  .grid {
+    /*height: 70vmin;*/
+  }
+  .button {
+    font-size: 0.9rem;
+  }
+  .btn-container {
+    width: 2.4rem;
+  }
 }
