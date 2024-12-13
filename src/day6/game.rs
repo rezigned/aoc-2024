@@ -42,8 +42,6 @@ impl Direction {
 #[derive(Clone, Store)]
 pub(crate) struct Game {
     pub grid: Grid,
-    width: usize,
-    height: usize,
     state: State,
     mode: Part,
     guard: Position,
@@ -70,15 +68,13 @@ impl Game {
         let guard = grid.find(GUARD);
 
         Self {
-            width: grid.width,
-            height: grid.height,
-            grid: Grid::new(input),
             state: Default::default(),
             direction: Default::default(),
             visited: HashSet::from([guard]),
             loops: HashSet::new(),
             total_loops: 0,
             context: Vec::with_capacity(1),
+            grid,
             mode,
             guard,
         }
@@ -162,8 +158,15 @@ impl Game {
         match self.mode {
             Part::One => self.state = State::Done,
             Part::Two => {
-                self.state = State::Running;
+                // If the context's size is 0. We're done searching for the loops.
+                // Otherwise keep searching.
+                self.state = if self.context.is_empty() {
+                    State::Done
+                } else {
+                    State::Running
+                };
 
+                // Restore values.
                 if let Some(ctx) = self.context.pop() {
                     self.guard = ctx.guard;
                     self.direction = ctx.direction;
@@ -331,6 +334,7 @@ mod test {
 ..........
 .#..^.....
 ........#.
+#.........
 ......#...";
 
     fn game(mode: Part) -> Game {
@@ -343,7 +347,7 @@ mod test {
 
         // Properties
         assert_eq!(grid.width, 10);
-        assert_eq!(grid.height, 9);
+        assert_eq!(grid.height, 10);
 
         // Basic ops
         assert_eq!(grid.find(GUARD), (4, 6));
@@ -376,5 +380,25 @@ mod test {
         game.update();
         assert_eq!(game.guard, (5, 1));
         assert_eq!(game.direction, Direction::Right);
+    }
+
+    #[test]
+    fn test_part1() {
+        let mut game = game(Part::One);
+        while game.state != State::Done {
+            game.update();
+        }
+
+        assert_eq!(game.total_visits(), 41);
+    }
+
+    #[test]
+    fn test_part2() {
+        let mut game = game(Part::Two);
+        while game.state != State::Done {
+            game.update();
+        }
+
+        assert_eq!(game.total_loops(), 6);
     }
 }

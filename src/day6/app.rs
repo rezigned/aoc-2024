@@ -38,8 +38,13 @@ pub fn App() -> impl IntoView {
         speed,
     );
 
-    // Pause at the beginning.
-    pause();
+    // Resume/pause the timer according to the current game state.
+    Effect::new(move || {
+        match game.state().get() {
+            State::Ready | State::Paused | State::Done => pause(),
+            State::Running => resume(),
+        };
+    });
 
     view! {
         <div class="grid">
@@ -65,17 +70,9 @@ pub fn App() -> impl IntoView {
                     class:paused=move || game.get().is_running()
                     on:click=move |_| {
                         match game.state().get() {
-                            State::Running => {
-                                pause();
-                                game.write().pause();
-                            }
-                            State::Done => {
-                                game.write().reset();
-                            }
-                            _ => {
-                                resume();
-                                game.write().play();
-                            }
+                            State::Running => game.write().pause(),
+                            State::Done => game.write().reset(),
+                            _ => game.write().play(),
                         }
                     }
                 />
